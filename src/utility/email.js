@@ -82,6 +82,7 @@ exports.sendSetPasswordEmail = (to, user) => {
 
 
 
+
 exports.setPasswordEmailOutlet = (to, user) => {
   const { email, outlets } = user;
 
@@ -109,6 +110,8 @@ exports.setPasswordEmailOutlet = (to, user) => {
     });
   });
 };
+
+
 
 
 
