@@ -136,7 +136,7 @@ const refreshTokenHandler = async (req, res, next) => {
   }
 };
 
-
+router.post('/admin/register', handleValidation(adminValidate), userSignup);
 router.post('/user/signin', userSignin);
 router.get('/logout', logoutHandler);
 router.post('/otp/verify', verifyOTP);
