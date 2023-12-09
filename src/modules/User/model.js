@@ -1,7 +1,7 @@
 const bcrypt = require('bcryptjs');
 const mongoose = require('mongoose');
 
-const Schema= new mongoose.Schema({
+const UserSchema= new mongoose.Schema({
   username:{
     type:String,
     required:[true,'Username Must Be Required'],
@@ -35,7 +35,37 @@ const Schema= new mongoose.Schema({
     type: Boolean,
     default: false,
   },
+  role: {
+    type: String,
+    //  SH -> SHARD_MIND
+    //DL -> DEMO_LAB
+    
+    enum: ['SH','DL'],
+    require: [true, 'Role must be selected'],
+  },
   refreshToken: [String],
 
 },{ timestamps: true }
 )
+
+
+// Password Hash Function using Bycryptjs
+
+UserSchema.pre('save', async function hashPassword(next) {
+  if (this.isModified('password')) {
+    const salt = await bcrypt.genSalt(10);
+    this.password = await bcrypt.hash(this.password, salt);
+  }
+  next();
+});
+
+UserSchema.methods = {
+  async authenticate(password) {
+    return await bcrypt.compare(password, this.password);
+  },
+};
+
+
+const UserModel = mongoose.model('user', UserSchema);
+
+module.exports = UserModel;

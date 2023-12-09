@@ -1,13 +1,9 @@
 const nodemailer = require('nodemailer');
 
-//emails
-const brandManagerInvitationEmail = require('../templates/brandManagerInviation');
-const outletManagerInvitationEmail = require('../templates/outletManagerInvitation');
-const placedOrderManagerEmail = require('../templates/placeOrderManagerEmail');
-const placedOrderCustomerEmail = require('../templates/placeOrderCustomerEmail');
+
 
 const createToken = require('./createToken');
-const { BRAND_MANAGER } = require('../config/constants');
+
 
 const transporter = nodemailer.createTransport({
   host: 'smtp.gmail.com',
