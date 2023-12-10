@@ -12,7 +12,9 @@ const { generateOTP } = require('../../utility/common');
 const { SendEmailUtility } = require('../../utility/email');
 const createToken = require('../../utility/createToken');
 
-// Admin account register
+
+// User Register
+
 const registerUser = async (userData) => {
   const { email, password } = userData;
 
@@ -48,7 +50,33 @@ const registerUser = async (userData) => {
 };
 
 
-// Sign In User>Brand Manager>
+
+
+// User OTP Verification
+const optVerification = async (data) => {
+  const { email, otp } = data;
+
+  const user = await User.findOne({
+    email,
+  });
+
+  if (user.otp !== Number(otp)) {
+    throw new BadRequest('OTP did not match');
+  }
+
+  user.isActive = true;
+  user.isVerified = true;
+  user.otp = undefined;
+
+  await user.save();
+
+  return user;
+};
+
+
+
+
+// Sign In User
 const signinUser = async (data) => {
   const { email, password } = data;
 
@@ -100,29 +128,6 @@ const signinUser = async (data) => {
 
 
 
-
-
-// User OTP Verification
-const optVerification = async (data) => {
-  const { email, otp } = data;
-
-  const user = await User.findOne({
-    email,
-  });
-
-  if (user.otp !== Number(otp)) {
-    throw new BadRequest('OTP did not match');
-  }
-
-  user.isActive = true;
-  user.isVerified = true;
-  user.otp = undefined;
-
-  await user.save();
-
-  return user;
-};
-
 // Resend OTP
 const resendOtp = async (data) => {
   const { email } = data;
@@ -147,6 +152,7 @@ const expireOTP = async (data) => {
   );
   return;
 };
+
 
 // User Access Token
 const getAccessToken = async (cookies, clearJWTCookie) => {
@@ -222,7 +228,6 @@ const getAccessToken = async (cookies, clearJWTCookie) => {
 
 
 
-
 // Find User By Cookie
 const findUserByCookie = async (cookies) => {
   if (!cookies?.jwt) throw new NoContent();
@@ -234,6 +239,7 @@ const findUserByCookie = async (cookies) => {
 };
 
 
+//Logout User
 const removeRefreshToken = async (token) => {
   const user = await User.updateOne(
     { refreshToken: token },

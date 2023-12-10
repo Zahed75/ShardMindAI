@@ -23,6 +23,21 @@ const userSignup = async (req, res, next) => {
   }
 };
 
+// User OTP Verify
+
+const verifyOTP = async (req, res, next) => {
+  try {
+    await authService.optVerification(req.body);
+
+    res.status(200).json({
+      message: 'Verification successfull',
+    });
+  } catch (err) {
+    next(err, req, res);
+  }
+};
+
+
 
 //user signin
 
@@ -55,43 +70,7 @@ const userSignin = async (req, res, next) => {
 
 
 
-
-
-
-
-
-
-const logoutHandler = async (req, res, next) => {
-  try {
-    const isUser = await authService.findUserByCookie(req.cookies);
-    if (!isUser) {
-      res.clearCookie('jwt', { httpOnly: true });
-      res.clearCookie('currentUserRole', { httpOnly: true });
-      return res.sendStatus(204);
-    }
-    await authService.removeRefreshToken(isUser.refreshToken);
-    res.clearCookie('jwt', { httpOnly: true });
-    res.clearCookie('currentUserRole', { httpOnly: true });
-
-    res.sendStatus(204);
-  } catch (err) {
-    next(err, req, res);
-  }
-};
-
-const verifyOTP = async (req, res, next) => {
-  try {
-    await authService.optVerification(req.body);
-
-    res.status(200).json({
-      message: 'Verification successfull',
-    });
-  } catch (err) {
-    next(err, req, res);
-  }
-};
-
-
+//Resend OTP
 const resendOTP = async (req, res, next) => {
   try {
     await authService.resendOtp(req.body);
@@ -105,6 +84,11 @@ const resendOTP = async (req, res, next) => {
 };
 
 
+
+
+
+
+//Expire OTP
 const expireOTP = async (req, res, next) => {
   try {
     await authService.expireOTP(req.body);
@@ -116,6 +100,9 @@ const expireOTP = async (req, res, next) => {
     next(err, req, res);
   }
 };
+
+
+//Get Refresh Token
 
 const refreshTokenHandler = async (req, res, next) => {
   try {
@@ -136,7 +123,27 @@ const refreshTokenHandler = async (req, res, next) => {
   }
 };
 
-router.post('/admin/register', handleValidation(adminValidate), userSignup);
+//Logout Handler
+
+const logoutHandler = async (req, res, next) => {
+  try {
+    const isUser = await authService.findUserByCookie(req.cookies);
+    if (!isUser) {
+      res.clearCookie('jwt', { httpOnly: true });
+      res.clearCookie('currentUserRole', { httpOnly: true });
+      return res.sendStatus(204);
+    }
+    await authService.removeRefreshToken(isUser.refreshToken);
+    res.clearCookie('jwt', { httpOnly: true });
+    res.clearCookie('currentUserRole', { httpOnly: true });
+
+    res.sendStatus(204);
+  } catch (err) {
+    next(err, req, res);
+  }
+};
+
+router.post('/register', handleValidation(adminValidate), userSignup);
 router.post('/user/signin', userSignin);
 router.get('/logout', logoutHandler);
 router.post('/otp/verify', verifyOTP);

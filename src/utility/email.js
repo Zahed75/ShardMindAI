@@ -23,7 +23,7 @@ const transporter = nodemailer.createTransport({
 
 exports.SendEmailUtility = async (EmailTo, EmailText, EmailSubject) => {
   let mailOptions = {
-    from: 'Syscomatic-Technologies  <support@shardmind.io>',
+    from: 'ShardMindAI <support@shardmind.io>',
     to: EmailTo,
     subject: EmailSubject,
     text: EmailText,
