@@ -1,11 +1,11 @@
 version: '3'
 
 networks:
-  onnow-production-network:
+  shardmind-production-network:
     driver: bridge
 
 services:
-  onnow_production_backend:
+  shardmind_production_backend:
     container_name: shardmind_production_backend
     restart: always
     build:
@@ -22,7 +22,7 @@ services:
     depends_on:
       - shardmind_production_mongo
 
-  onnow_production_mongo:
+  shardmind_production_mongo:
     container_name: shardmind_production_mongo
     restart: always
     image: mongo
@@ -35,7 +35,7 @@ services:
     env_file:
       - .env
 
-  onnow_production_mongo_express:
+  shardmind_production_mongo_express:
     container_name: shardmind_production_mongo_express
     image: mongo-express
     restart: always
