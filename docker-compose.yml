@@ -42,7 +42,7 @@ services:
     ports:
       - "127.0.0.1:17003:8081"
     networks:
-      - shard-production-network
+      - shardmind-production-network  # Corrected network name
     env_file:
       - .env
     depends_on:
