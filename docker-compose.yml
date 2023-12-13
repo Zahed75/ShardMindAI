@@ -17,9 +17,9 @@ services:
       - .env
     volumes:
       - .:/app
-
     ports:
       - "127.0.0.1:17001:8080"
+    working_dir: /app
     depends_on:
       - shardmind_production_mongo
 
@@ -43,7 +43,7 @@ services:
     ports:
       - "127.0.0.1:17003:8081"
     networks:
-      - shardmind-production-network  
+      - shardmind-production-network
     env_file:
       - .env
     depends_on:
