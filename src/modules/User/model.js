@@ -4,7 +4,6 @@ const mongoose = require('mongoose');
 const UserSchema= new mongoose.Schema({
   username:{
     type:String,
-    required:[false,'Username Must Be Required'],
     max:[30,'Please Input Your UserName'],
     
   },
