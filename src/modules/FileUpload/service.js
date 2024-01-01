@@ -1,6 +1,6 @@
 // service.js
 const { s3Client } = require('../../utility/digitalOcenStorage');
-const { S3, PutObjectCommand } = require("@aws-sdk/client-s3");
+const { S3, PutObjectCommand,DeleteObjectCommand } = require("@aws-sdk/client-s3");
 const { BadRequest } = require('../../utility/errors');
 const { ListObjectsV2Command } = require("@aws-sdk/client-s3");
 // Upload File
@@ -55,10 +55,31 @@ const getAllFiles = async (userId) => {
 
 
 
+//Remove File from Bucket
+
+// Remove Specific File
+const removeFile = async (userId, fileKey) => {
+  try {
+    const deleteParams = {
+      Bucket: 'shardmind.ai', // Digital Ocean Bucket Name
+      Key: `users/${userId}/${fileKey}`,
+    };
+
+    const deleteCommand = new DeleteObjectCommand(deleteParams);
+    const result = await s3Client.send(deleteCommand);
+
+    return result;
+  } catch (error) {
+    console.error('Error removing file:', error);
+    throw error;
+  }
+};
+
 
 
 module.exports = {
   uploadFile,
   getAllFiles,
+  removeFile
   
 };

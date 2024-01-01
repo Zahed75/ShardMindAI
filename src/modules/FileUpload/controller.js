@@ -61,9 +61,31 @@ const getAllFiles = async (req, res) => {
 
 
 
-router.get('/files/:userId', getAllFiles);
+//Remove File
 
+const removeFile = async (req, res) => {
+  try {
+    const userId = req.params.userId; // Assuming userId is part of the URL params
+    const fileKey = req.params.fileKey; // Assuming fileKey is part of the URL params
+
+    if (!userId || !fileKey) {
+      return res.status(400).json({ success: false, message: 'userId and fileKey are required' });
+    }
+
+    const result = await fileService.removeFile(userId, fileKey);
+
+    return res.status(200).json({ success: true, message: 'File removed successfully', result });
+  } catch (error) {
+    console.error('Error removing file:', error);
+    return res.status(500).json({ success: false, message: 'Internal Server Error' });
+  }
+};
+
+
+
+router.get('/files/:userId', getAllFiles);
 router.post('/upload',authMiddleware,
 roleMiddleware([SHARD_MIND,DEMO_LAB]),upload.single('file'), fileUpload);
 
+router.delete('/files/:userId/:fileKey', removeFile);
 module.exports = router;
