@@ -1,7 +1,7 @@
 // controller.js
 const express = require('express');
 const multer = require('multer');
-const fileService = require('./service'); // Import your service module
+const fileService = require('./service');
 const { BadRequest } = require('../../utility/errors');
 
 const handleValidation = require('../../middlewares/schemaValidation');
@@ -15,6 +15,8 @@ const router = express.Router();
 
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
+
+//Upload File 
 
 const fileUpload = async (req, res, next) => {
   try {
@@ -34,6 +36,32 @@ const fileUpload = async (req, res, next) => {
     return res.status(500).json({ error: 'Internal Server Error' });
   }
 };
+
+
+// GetAll File by  user
+
+
+
+const getAllFiles = async (req, res) => {
+  try {
+    const userId = req.params.userId; // Assuming userId is part of the URL params
+    const files = await fileService.getAllFiles(userId);
+
+    if (!files.length) {
+      return res.status(404).json({ success: false, message: 'No files found for the user' });
+    }
+
+    return res.status(200).json({ success: true, files });
+  } catch (error) {
+    console.error('Error getting files:', error);
+    return res.status(500).json({ success: false, message: 'Internal Server Error' });
+  }
+};
+
+
+
+
+router.get('/files/:userId', getAllFiles);
 
 router.post('/upload',authMiddleware,
 roleMiddleware([SHARD_MIND,DEMO_LAB]),upload.single('file'), fileUpload);

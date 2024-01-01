@@ -41,6 +41,7 @@ const whitelist = [
   'http://localhost:3005',
   'https://shardmind.nyc3.digitaloceanspaces.com',
   'https://nyc3.digitaloceanspaces.com/shardmind.ai',
+  'https://nyc3.digitaloceanspaces.com',
   '*',
 ];
 const corsOptions = {
