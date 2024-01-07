@@ -3,6 +3,7 @@ const { s3Client } = require('../../utility/digitalOcenStorage');
 const { S3, PutObjectCommand,DeleteObjectCommand } = require("@aws-sdk/client-s3");
 const { BadRequest } = require('../../utility/errors');
 const { ListObjectsV2Command } = require("@aws-sdk/client-s3");
+
 // Upload File
 const uploadFile = async (file, userId) => {
   try {
@@ -15,7 +16,7 @@ const uploadFile = async (file, userId) => {
 
     const uploadCommand = new PutObjectCommand(uploadParams);
     const result = await s3Client.send(uploadCommand);
-    return result;
+    return { ...result, originalFilename: file.originalname };
   } catch (error) {
     console.error('Error uploading file:', error);
     throw error;
